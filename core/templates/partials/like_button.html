@@ -1,0 +1,14 @@
+<button 
+hx-post="{% url 'like_publication' publication.id %}" 
+hx-target="#likeBtn" 
+hx-swap="outerHTML"
+class="flex items-center gap-2 text-gray-400 hover:text-white"
+id="likeBtn"
+>
+{% if liked %}
+    <i class="fa-solid fa-heart text-primary"></i>
+{% else %}
+    <i class="fa-regular fa-heart"></i>
+{% endif %}
+<span>{{ like_count }}</span>
+</button>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ publication.title }} - SJMEDSPACE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        document.body.addEventListener('htmx:configRequest', function (event) {
+            event.detail.headers['X-CSRFToken'] = "{{ csrf_token }}";
+        });
+    </script>
+    
+
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e91e63',
+                    }
+                }
+            }
+        }
+    </script>
+
+
+<script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <header class="border-b border-gray-800">
+        <nav class="flex items-center justify-between px-4 py-4">
+            <div class="flex items-center space-x-8">
+                <a href="{% url 'homepage' %}" class="text-xl font-bold">SJMEDSPACE</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="{% url 'publications' %}" class="hover:text-primary">Publications</a>
+                    <a href="#" class="hover:text-primary">Programs</a>
+                    <a href="{% url 'announcements' %}" class="hover:text-primary">Announcements</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="hover:text-primary">Sign out</a>
+                {% else %}
+                    <a href="{% url 'login_view' %}" class="hover:text-primary">Sign in</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Publication Detail -->
+    <main class="flex-grow p-4 md:p-8 pb-24">
+        <div class="max-w-4xl mx-auto">
+            <!-- Publication Title -->
+            <h1 class="text-3xl md:text-4xl font-bold mb-12">
+                {{ publication.title }}
+            </h1>
+
+            <!-- Abstract Section -->
+            <div class="mb-10">
+                <h2 class="text-2xl font-bold mb-6">Abstract</h2>
+                <div class="text-gray-300 space-y-4">
+                    <p>{{ publication.abstract }}</p>
+                </div>
+            </div>
+
+            <div class="mb-10">
+                <h2 class="text-2xl font-bold mb-6">Description</h2>
+                <div class="text-gray-300 space-y-4">
+                    <p>{{ publication.description }}</p>
+                </div>
+            </div>
+
+            <!-- Comments List -->
+            <div class="mt-8 space-y-6" id="commentsList">
+                <h3 class="text-xl font-bold mb-4">Comments ({{ comments.count }})</h3>
+
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="border-b border-gray-800 pb-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+                                    <span class="text-sm font-medium">
+                                        {{ comment.user.username|first|upper }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-medium">{{ comment.user.username }}</h4>
+                                        <span class="text-xs text-gray-500">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+                                    </div>
+                                    <p class="mt-1 text-gray-300">
+                                        {{ comment.comment_value }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-500">No comments yet. Be the first to comment!</p>
+                {% endif %}
+            </div>
+
+            <!-- Read Full Publication Button -->
+           
+        </div>
+    </main>
+
+    <!-- Fixed bottom bar for interaction -->
+<div class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 py-4 px-6 md:px-12">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
+        
+        <!-- Like & Save Buttons -->
+        <div class="flex items-center gap-6">
+            <!-- Like Form -->
+            <form method="POST" action="{% url 'like_publication' publication.id %}">
+                {% csrf_token %}
+                <button type="submit" class="flex items-center gap-2 text-gray-400 hover:text-white">
+                    {% if liked %}
+                        <i class="fa-solid fa-heart text-primary"></i> <!-- Filled Heart -->
+                    {% else %}
+                        <i class="fa-regular fa-heart"></i> <!-- Empty Heart -->
+                    {% endif %}
+                    <span>{{ like_count }}</span>
+                </button>
+            </form>
+
+            <!-- Save Form -->
+            <form method="POST" action="{% url 'save_publication' publication.id %}">
+                {% csrf_token %}
+                <button type="submit" class="flex items-center gap-2 text-gray-400 hover:text-white">
+                    {% if saved %}
+                        <i class="fa-solid fa-bookmark text-primary"></i> <!-- Filled Bookmark -->
+                    {% else %}
+                        <i class="fa-regular fa-bookmark"></i> <!-- Empty Bookmark -->
+                    {% endif %}
+                    <span>Save</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Read Full Article Button -->
+        <a href="{{ publication.url }}" class="bg-primary hover:bg-pink-700 text-white font-medium py-2 px-6 rounded-lg">
+            Read Full Article
+        </a>
+
+        <!-- Comment Form -->
+        {% if user.is_authenticated %}
+            <form id="commentForm" method="POST" class="flex-grow flex gap-2">
+                {% csrf_token %}
+                <input 
+                    type="text" name="comment_value" 
+                    placeholder="Add a comment..." 
+                    class="flex-grow bg-black border border-gray-800 rounded-lg py-2 px-4 focus:outline-none focus:ring-1 focus:ring-primary"
+                    required
+                >
+                <button type="submit" class="bg-primary hover:bg-pink-700 text-white font-medium py-2 px-4 rounded-lg">
+                    Post
+                </button>
+            </form>
+        {% else %}
+            <p class="text-gray-500 text-sm">You must <a href="{% url 'login_view' %}" class="text-primary">log in</a> to comment.</p>
+        {% endif %}
+    </div>
+</div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const likeBtn = document.getElementById("likeBtn");
+            const saveBtn = document.getElementById("saveBtn");
+
+            likeBtn.addEventListener("click", function() {
+                const publicationId = this.getAttribute("data-publication");
+                fetch(`/publication/${publicationId}/like/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/json"
+                    },
+                }).then(response => response.json()).then(data => {
+                    if (data.liked) {
+                        likeBtn.querySelector("i").classList.add("fa-solid", "text-primary");
+                    } else {
+                        likeBtn.querySelector("i").classList.remove("fa-solid", "text-primary");
+                    }
+                    document.getElementById("likeCount").textContent = data.like_count;
+                });
+            });
+
+            saveBtn.addEventListener("click", function() {
+                const publicationId = this.getAttribute("data-publication");
+                fetch(`/publication/${publicationId}/save/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/json"
+                    },
+                }).then(response => response.json()).then(data => {
+                    if (data.saved) {
+                        saveBtn.querySelector("i").classList.add("fa-solid", "text-primary");
+                    } else {
+                        saveBtn.querySelector("i").classList.remove("fa-solid", "text-primary");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

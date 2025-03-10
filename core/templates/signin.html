@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SJMEDSPACE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e91e63',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <header class="border-b border-gray-800">
+        <nav class="flex items-center justify-between px-4 py-4">
+            <div class="flex items-center space-x-8">
+                <a href="/" class="text-xl font-bold">SJMEDSPACE</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="publications.html" class="hover:text-primary">Publications</a>
+                    <a href="#" class="hover:text-primary">Programs</a>
+                    <a href="#" class="hover:text-primary">Reactionss</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Login Form -->
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <div class="bg-gray-900 border border-gray-800 rounded-lg p-8">
+                <h1 class="text-2xl font-bold mb-6 text-center">Login to SJMEDSPACE</h1>
+
+
+                
+                <!-- Error Message Area -->
+                <div id="errorMessage" class="hidden bg-red-900/50 border border-red-800 text-red-200 px-4 py-3 rounded-lg mb-6">
+                    <!-- Error message will be displayed here -->
+
+                      
+                {% if messages %}
+                {% for message in messages %}
+                    <p style="color: red;">{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+
+                
+                </div>
+                
+                <form id="loginForm" method="POST" action="{% url 'login_view' %}">
+                    {% csrf_token %}
+                    <div class="mb-6">
+                        <label for="email" class="block text-sm font-medium mb-2">Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email"
+                            class="w-full bg-black border border-gray-800 rounded-lg py-3 px-4 focus:outline-none focus:ring-1 focus:ring-primary"
+                            placeholder="your@email.com"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <label for="password" class="block text-sm font-medium">Password</label>
+                            <a href="#" class="text-xs text-primary hover:underline">Forgot password?</a>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password"
+                            class="w-full bg-black border border-gray-800 rounded-lg py-3 px-4 focus:outline-none focus:ring-1 focus:ring-primary"
+                            placeholder="••••••••"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded bg-black border-gray-700 text-primary focus:ring-primary">
+                            <span class="ml-2 text-sm text-gray-300">Remember me</span>
+                        </label>
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        class="w-full bg-primary hover:bg-pink-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200"
+                    >
+                        Sign in
+                    </button>
+                    
+                    <div class="mt-6 text-center text-sm text-gray-400">
+                        No account? 
+                        <a href="/signup" class="text-primary hover:underline">Sign up</a>
+                    </div>
+                </form>
+            </div>
+            
+           
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-6 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 SJMEDSPACE. All rights reserved.</p>
+            <div class="flex space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+   
+</body>
+</html>

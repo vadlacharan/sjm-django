@@ -1,0 +1,14 @@
+<button 
+    hx-post="{% url 'save_publication' publication.id %}" 
+    hx-target="#saveBtn" 
+    hx-swap="outerHTML"
+    class="flex items-center gap-2 text-gray-400 hover:text-white"
+    id="saveBtn"
+>
+    {% if saved %}
+        <i class="fa-solid fa-bookmark text-primary"></i>
+    {% else %}
+        <i class="fa-regular fa-bookmark"></i>
+    {% endif %}
+    <span>Save</span>
+</button>

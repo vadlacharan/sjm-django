@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SJMEDSPACE - Medical Publications Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e91e63',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <header class="border-b border-gray-800">
+        <nav class="flex items-center justify-between px-4 py-4">
+            <div class="flex items-center space-x-8">
+                <a href="/" class="text-xl font-bold">SJMEDSPACE</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="publications" class="hover:text-primary">Publications</a>
+                    <a href="#" class="hover:text-primary">Programs</a>
+                    <a href="announcements" class="hover:text-primary">Announcements</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                {% if user.is_authenticated %}
+                <a href="/logout" class="hover:text-primary">logout</a>
+                {% else %}
+                    <a href="{% url 'login_view' %}" class="hover:text-primary">Sign in</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="flex-grow">
+        <section class="py-16 px-4 max-w-6xl mx-auto text-center">
+            <h1 class="text-5xl md:text-6xl font-bold mb-8">
+                Fueling Success through Every <span class="text-primary">Publication</span>
+            </h1>
+            <p class="text-gray-400 text-lg max-w-3xl mx-auto mb-12">
+                SJMedspace is your ultimate platform for mastering the USMLE exam. Explore curated publications, gain expert insights, save favorites, and access comprehensive courses to achieve your medical career goals.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
+                <a href="publications" class="bg-primary hover:bg-pink-700 text-white font-medium py-3 px-8 rounded-full">
+                    Publications
+                </a>
+                <a href="/login" class="bg-transparent hover:bg-gray-800 text-white font-medium py-3 px-8 rounded-full border border-gray-700">
+                    Sign in
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold mb-2">40+</h2>
+                    <p class="text-gray-400">Publications</p>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold mb-2">10+</h2>
+                    <p class="text-gray-400">years experience</p>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold mb-2">4.9/5</h2>
+                    <p class="text-gray-400">Star Rating</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-6 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 SJMEDSPACE. All rights reserved.</p>
+            <div class="flex space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
